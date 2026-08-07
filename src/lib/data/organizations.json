@@ -1,0 +1,13 @@
+[
+  {
+    "id": "64feb2a0-6642-4bdb-a33f-e3409a3f78e9",
+    "nome": "Studio Beatriz Lash Design",
+    "tipoNegocio": "Lash Designer",
+    "email": "contato@studiobeatriz.com",
+    "telefone": "11999990000",
+    "status": "ativo",
+    "plano": "Starter",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  }
+]

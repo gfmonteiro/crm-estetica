@@ -1,0 +1,46 @@
+flowchart TD
+    LOGIN["/login"] --> TFA{"2FA ativo?"}
+    TFA -->|sim| CODE["/2fa"]
+    TFA -->|não| DASH
+    CODE --> DASH["/dashboard<br/>KPIs, gráficos, agenda do dia"]
+
+    DASH --> CLIENTES["/clientes<br/>lista + busca + filtros"]
+    CLIENTES --> PERFIL["/clientes/:id<br/>Perfil 360°"]
+    PERFIL --> HIST["Histórico de atendimentos"]
+    PERFIL --> FOTOS["Fotos antes/depois"]
+    PERFIL --> FINCLI["Financeiro do cliente"]
+    PERFIL --> DOCS["Documentos e assinaturas"]
+
+    DASH --> AGENDA["/agenda<br/>dia / semana / mês / timeline"]
+    AGENDA --> NOVOAG["Novo agendamento"]
+    AGENDA --> ESPERA["Lista de espera"]
+
+    DASH --> PIPELINE["/pipeline<br/>Kanban de leads"]
+    PIPELINE --> LEADDET["Detalhe do lead"]
+
+    DASH --> FINANCEIRO["/financeiro"]
+    FINANCEIRO --> CAIXA["Fluxo de caixa"]
+    FINANCEIRO --> CONTAS["Contas a pagar/receber"]
+    FINANCEIRO --> COMISSOES["Comissões"]
+
+    DASH --> ESTOQUE["/estoque"]
+    ESTOQUE --> PRODUTOS["Produtos e fornecedores"]
+
+    DASH --> MARKETING["/marketing"]
+    MARKETING --> CAMPANHAS["Campanhas segmentadas"]
+    MARKETING --> FIDELIDADE["Fidelidade e cupons"]
+
+    DASH --> WHATSAPP["/whatsapp<br/>central de conversas"]
+    WHATSAPP --> TEMPLATES["Modelos de mensagem"]
+    WHATSAPP --> AUTOMACOES["Regras de automação"]
+
+    DASH --> RELATORIOS["/relatorios"]
+    RELATORIOS --> EXPORT["Exportar PDF/Excel/CSV"]
+
+    DASH --> EQUIPE["/equipe"]
+    EQUIPE --> METAS["Metas e permissões"]
+
+    DASH --> CONFIG["/configuracoes"]
+    CONFIG --> EMPRESA["Empresa e tema"]
+    CONFIG --> INTEGRACOES["Integrações"]
+    CONFIG --> USUARIOS["Usuários e papéis"]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "7911ebe0-cd04-4e33-8183-ac19c7eb4020",
+    "nome": "Retorno pós-procedimento",
+    "diasAposAtendimento": 15,
+    "mensagem": "Oi {{cliente}}! Já faz {{dias}} dias do seu {{procedimento}} com {{profissional}} 💛 Passando pra saber como está o resultado — vamos agendar sua manutenção?",
+    "ativo": true,
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  }
+]

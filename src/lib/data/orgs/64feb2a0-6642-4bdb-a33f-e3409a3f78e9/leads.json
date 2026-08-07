@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1ab29acc-966a-46ca-a59d-f2a01bff0956",
+    "nome": "Juliana Ferreira",
+    "telefone": "11955554444",
+    "origem": "Instagram",
+    "procedureInteresse": "Volume Russo",
+    "valorEstimado": 220,
+    "stage": "novo_lead",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "c1ce68da-33b6-488c-8969-44bab69e5825",
+    "nome": "Patrícia Gomes",
+    "telefone": "11944443333",
+    "origem": "Indicação",
+    "procedureInteresse": "Design de Sobrancelhas",
+    "valorEstimado": 60,
+    "stage": "contato",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "1a105d4e-89fb-4753-9c88-27666ce09c25",
+    "nome": "Renata Costa",
+    "telefone": "11933332222",
+    "origem": "TikTok",
+    "procedureInteresse": "Volume Brasileiro",
+    "valorEstimado": 180,
+    "observacoes": "Pediu desconto, aguardando retorno",
+    "stage": "orcamento",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "4ba23f44-d54d-49ea-9a2c-e5b5abe3f7e4",
+    "nome": "Volume Brasileiro",
+    "valor": 180,
+    "tempoMedioMin": 120,
+    "comissaoPercentual": 30,
+    "descricao": "Extensão de cílios volume brasileiro, efeito natural com volume.",
+    "materiais": "Fios 0.07mm, cola profissional",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "804f0a35-3bfb-4dd9-8451-39404fb7a4db",
+    "nome": "Volume Russo",
+    "valor": 220,
+    "tempoMedioMin": 150,
+    "comissaoPercentual": 30,
+    "descricao": "Efeito volumoso e dramático com fios finos.",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "929f7ff6-f051-46a4-b24a-ec83e67ca49b",
+    "nome": "Design de Sobrancelhas",
+    "valor": 60,
+    "tempoMedioMin": 40,
+    "comissaoPercentual": 25,
+    "descricao": "Design com henna e alinhamento.",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "373f0a94-abba-4063-b4ca-cfdf87631105",
+    "nome": "Lash Lifting",
+    "valor": 120,
+    "tempoMedioMin": 60,
+    "comissaoPercentual": 25,
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  }
+]

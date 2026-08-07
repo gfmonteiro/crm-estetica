@@ -1,0 +1,22 @@
+[
+  {
+    "id": "6767be48-4c69-4206-bc07-63a43ba4fd73",
+    "clientId": "6681b6a6-c4aa-44f5-8c6c-82babef66489",
+    "tipo": "receita",
+    "categoria": "Procedimento",
+    "metodoPagamento": "pix",
+    "valor": 180,
+    "descricao": "Volume Brasileiro",
+    "data": "2026-07-31",
+    "createdAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "ad30c191-0c9a-4464-ae95-91633d09edc1",
+    "tipo": "despesa",
+    "categoria": "Materiais e insumos",
+    "valor": 320,
+    "descricao": "Compra de fios e cola",
+    "data": "2026-08-07",
+    "createdAt": "2026-08-07T01:09:17.130Z"
+  }
+]

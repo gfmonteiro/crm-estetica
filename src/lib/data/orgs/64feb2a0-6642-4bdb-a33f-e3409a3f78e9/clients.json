@@ -1,0 +1,54 @@
+[
+  {
+    "id": "6681b6a6-c4aa-44f5-8c6c-82babef66489",
+    "nome": "Beatriz Almeida",
+    "telefone": "11988887777",
+    "whatsapp": "11988887777",
+    "email": "beatriz@email.com",
+    "dataNascimento": "1994-08-15",
+    "sexo": "Feminino",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "origem": "Instagram",
+    "status": "ativo",
+    "tags": [
+      "VIP",
+      "Cliente recorrente"
+    ],
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z",
+    "deletedAt": null
+  },
+  {
+    "id": "97e23f18-bf2a-4167-a010-411bf09a52ea",
+    "nome": "Carla Souza",
+    "telefone": "11977776666",
+    "whatsapp": "11977776666",
+    "email": "carla@email.com",
+    "dataNascimento": "1998-08-20",
+    "cidade": "Garça",
+    "estado": "SP",
+    "origem": "Indicação",
+    "status": "ativo",
+    "tags": [
+      "Primeira visita"
+    ],
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z",
+    "deletedAt": null
+  },
+  {
+    "id": "ffa4c9bf-3b35-47e2-ad11-7b1e4b6ab41e",
+    "nome": "Fernanda Lima",
+    "telefone": "11966665555",
+    "whatsapp": "11966665555",
+    "origem": "TikTok",
+    "status": "ativo",
+    "tags": [
+      "Influencer"
+    ],
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z",
+    "deletedAt": null
+  }
+]

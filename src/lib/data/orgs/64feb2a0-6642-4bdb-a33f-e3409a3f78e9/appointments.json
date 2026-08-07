@@ -1,0 +1,46 @@
+[
+  {
+    "id": "b35905a4-fe8a-4a04-9abe-93590a1ef387",
+    "clientId": "6681b6a6-c4aa-44f5-8c6c-82babef66489",
+    "procedureId": "4ba23f44-d54d-49ea-9a2c-e5b5abe3f7e4",
+    "profissional": "Ana Studio",
+    "startAt": "2026-08-07T10:00:00.000Z",
+    "endAt": "2026-08-07T12:00:00.000Z",
+    "status": "confirmado",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "8515e50d-0b74-4ce4-afc3-4a62d344c882",
+    "clientId": "97e23f18-bf2a-4167-a010-411bf09a52ea",
+    "procedureId": "929f7ff6-f051-46a4-b24a-ec83e67ca49b",
+    "profissional": "Ana Studio",
+    "startAt": "2026-08-07T14:30:00.000Z",
+    "endAt": "2026-08-07T15:10:00.000Z",
+    "status": "agendado",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "b28fec05-1036-4b5e-a3f3-4e42044aab70",
+    "clientId": "ffa4c9bf-3b35-47e2-ad11-7b1e4b6ab41e",
+    "procedureId": "804f0a35-3bfb-4dd9-8451-39404fb7a4db",
+    "profissional": "Ana Studio",
+    "startAt": "2026-08-09T11:00:00.000Z",
+    "endAt": "2026-08-09T13:30:00.000Z",
+    "status": "agendado",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "97f15766-5a58-4741-b598-98823e799b76",
+    "clientId": "6681b6a6-c4aa-44f5-8c6c-82babef66489",
+    "procedureId": "373f0a94-abba-4063-b4ca-cfdf87631105",
+    "profissional": "Ana Studio",
+    "startAt": "2026-07-31T09:00:00.000Z",
+    "endAt": "2026-07-31T10:00:00.000Z",
+    "status": "compareceu",
+    "createdAt": "2026-08-07T01:09:17.130Z",
+    "updatedAt": "2026-08-07T01:09:17.130Z"
+  }
+]

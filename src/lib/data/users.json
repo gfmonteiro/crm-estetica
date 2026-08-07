@@ -1,0 +1,19 @@
+[
+  {
+    "id": "19ba6b0c-08aa-4fcc-ac16-a3226e1e42e0",
+    "nome": "Studio Master",
+    "email": "master@studio.com",
+    "passwordHash": "$2b$10$7JzeiviVsEQjngPUFHVCI.F8wa/1iHFnoxXKX5f/P318w/hvCTWwa",
+    "role": "master",
+    "createdAt": "2026-08-07T01:09:17.130Z"
+  },
+  {
+    "id": "650cb198-00ad-465e-a69d-97d1a33156ec",
+    "nome": "Ana Studio",
+    "email": "demo@studio.com",
+    "passwordHash": "$2b$10$u3NJBnOoVCaWqJEPwJuD7OlB3KAuUqYIs0gayBEgmn5A3ypP4uVRG",
+    "role": "admin",
+    "organizationId": "64feb2a0-6642-4bdb-a33f-e3409a3f78e9",
+    "createdAt": "2026-08-07T01:09:17.130Z"
+  }
+]

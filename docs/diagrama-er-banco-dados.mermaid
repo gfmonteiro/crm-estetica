@@ -1,0 +1,122 @@
+erDiagram
+    ORGANIZATIONS ||--o{ UNITS : possui
+    ORGANIZATIONS ||--o{ USERS : emprega
+    UNITS ||--o{ USERS : lota
+    ORGANIZATIONS ||--o{ ROLES : define
+    ROLES ||--o{ USERS : atribuido_a
+
+    ORGANIZATIONS ||--o{ CLIENTS : cadastra
+    CLIENTS ||--o{ CLIENT_TAGS : possui
+    CLIENTS ||--o{ CLIENT_ATTACHMENTS : possui
+    CLIENTS ||--o{ APPOINTMENTS : agenda
+    CLIENTS ||--o{ SERVICE_HISTORY : possui
+    CLIENTS ||--o{ PHOTOS : possui
+    CLIENTS ||--o{ DOCUMENTS : possui
+    CLIENTS ||--o{ FINANCIAL_TRANSACTIONS : gera
+    CLIENTS ||--o{ LEADS : origina
+
+    ORGANIZATIONS ||--o{ PROCEDURES : oferece
+    PROCEDURES ||--o{ APPOINTMENTS : referenciado_em
+    PROCEDURES ||--o{ SERVICE_HISTORY : referenciado_em
+
+    USERS ||--o{ APPOINTMENTS : atende
+    USERS ||--o{ COMMISSIONS : recebe
+    APPOINTMENTS ||--o{ APPOINTMENT_STATUS_HISTORY : registra
+    APPOINTMENTS ||--o| SERVICE_HISTORY : gera
+
+    FINANCIAL_TRANSACTIONS }o--|| FINANCIAL_CATEGORIES : classificada_em
+    FINANCIAL_TRANSACTIONS ||--o{ INSTALLMENTS : parcelada_em
+    FINANCIAL_TRANSACTIONS ||--o| COMMISSIONS : origina
+
+    ORGANIZATIONS ||--o{ PRODUCTS : estoca
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : movimenta
+    PRODUCTS }o--|| SUPPLIERS : fornecido_por
+
+    ORGANIZATIONS ||--o{ PIPELINE_STAGES : define
+    PIPELINE_STAGES ||--o{ LEADS : contem
+    LEADS ||--o{ LEAD_ACTIVITIES : registra
+
+    ORGANIZATIONS ||--o{ CAMPAIGNS : cria
+    CAMPAIGNS ||--o{ CAMPAIGN_TARGETS : direciona
+    CAMPAIGN_TARGETS }o--|| CLIENTS : atinge
+    ORGANIZATIONS ||--o{ COUPONS : emite
+    CLIENTS ||--o{ LOYALTY_POINTS : acumula
+    CLIENTS ||--o{ REFERRALS : indica
+
+    ORGANIZATIONS ||--o{ MESSAGE_TEMPLATES : configura
+    CLIENTS ||--o{ WHATSAPP_MESSAGES : troca
+    ORGANIZATIONS ||--o{ AUTOMATION_RULES : configura
+
+    ORGANIZATIONS ||--o{ AUDIT_LOGS : registra
+
+    CLIENTS {
+        uuid id PK
+        uuid organization_id FK
+        string nome
+        string telefone
+        string whatsapp
+        string email
+        string cpf_encrypted
+        date data_nascimento
+        string sexo
+        string origem
+        string status
+        timestamp deleted_at
+        timestamp created_at
+    }
+
+    APPOINTMENTS {
+        uuid id PK
+        uuid organization_id FK
+        uuid unit_id FK
+        uuid client_id FK
+        uuid procedure_id FK
+        uuid professional_id FK
+        timestamp start_at
+        timestamp end_at
+        string status
+        boolean is_waitlist
+        timestamp created_at
+    }
+
+    PROCEDURES {
+        uuid id PK
+        uuid organization_id FK
+        string nome
+        decimal valor
+        int tempo_medio_min
+        decimal comissao_percentual
+        text descricao
+    }
+
+    FINANCIAL_TRANSACTIONS {
+        uuid id PK
+        uuid organization_id FK
+        uuid client_id FK
+        uuid category_id FK
+        decimal valor
+        string tipo
+        string metodo_pagamento
+        string status
+        timestamp data
+    }
+
+    LEADS {
+        uuid id PK
+        uuid organization_id FK
+        uuid client_id FK
+        uuid stage_id FK
+        string origem
+        timestamp created_at
+    }
+
+    USERS {
+        uuid id PK
+        uuid organization_id FK
+        uuid unit_id FK
+        uuid role_id FK
+        string nome
+        string email
+        string password_hash
+        boolean two_factor_enabled
+    }

@@ -1,0 +1,59 @@
+flowchart TB
+    subgraph Client["Cliente"]
+        WEB["Next.js Web / PWA<br/>(TypeScript + Tailwind)"]
+    end
+
+    subgraph Edge["Camada de borda"]
+        GW["API Gateway / NestJS<br/>Auth JWT + OAuth + 2FA"]
+        WS["WebSocket Gateway<br/>(Socket.io + Redis Adapter)"]
+    end
+
+    subgraph Modules["Módulos de domínio (Clean Architecture)"]
+        M1["Clientes"]
+        M2["Agenda"]
+        M3["Financeiro"]
+        M4["Pipeline / Vendas"]
+        M5["Estoque"]
+        M6["Marketing"]
+        M7["WhatsApp"]
+        M8["Relatórios"]
+    end
+
+    subgraph Async["Processamento assíncrono"]
+        REDIS["Redis"]
+        QUEUE["BullMQ<br/>lembretes, disparos em massa,<br/>relatórios pesados"]
+    end
+
+    subgraph Data["Persistência"]
+        PG[("PostgreSQL<br/>multi-tenant + RLS")]
+        S3[("Amazon S3<br/>fotos, docs, antes/depois")]
+    end
+
+    subgraph External["Integrações externas"]
+        WA["WhatsApp Cloud API"]
+        GCAL["Google Calendar API"]
+        AI["Claude API<br/>(resumos, previsão, sugestões)"]
+    end
+
+    WEB -->|HTTPS/REST| GW
+    WEB <-->|realtime| WS
+    GW --> M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8
+    WS --> REDIS
+
+    M1 & M2 & M3 & M4 & M5 & M6 & M8 --> PG
+    M1 --> S3
+    M7 --> QUEUE
+    M2 --> QUEUE
+    M6 --> QUEUE
+    QUEUE --> REDIS
+    QUEUE --> WA
+    M2 --> GCAL
+    M8 --> AI
+    M1 --> AI
+
+    style Client fill:#1e293b,color:#fff
+    style Edge fill:#334155,color:#fff
+    style Modules fill:#0f172a,color:#fff
+    style Async fill:#334155,color:#fff
+    style Data fill:#1e293b,color:#fff
+    style External fill:#334155,color:#fff
