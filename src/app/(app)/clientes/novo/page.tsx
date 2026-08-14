@@ -61,7 +61,7 @@ export default function NovoClientePage() {
       </Link>
 
       <h1 className="mb-6 font-[family-name:var(--font-display)] text-2xl text-foreground">
-        Novo clienteOOO
+        Novo cliente
       </h1>
 
       <form onSubmit={handleSubmit} className="card space-y-6 p-6">

@@ -185,3 +185,82 @@ export interface LeadActivity {
   descricao: string;
   createdAt: string;
 }
+
+// ---------------------------------------------------------------------
+// Ficha de Anamnese
+// ---------------------------------------------------------------------
+
+export type QuestionType =
+  | "texto_curto"
+  | "texto_longo"
+  | "sim_nao"
+  | "unica_escolha"
+  | "multipla_escolha"
+  | "data"
+  | "numero";
+
+export interface AnamnesisQuestion {
+  id: string;
+  texto: string;
+  tipo: QuestionType;
+  opcoes?: string[]; // usado em unica_escolha / multipla_escolha
+  obrigatoria: boolean;
+  ordem: number;
+}
+
+export interface AnamnesisCategory {
+  id: string;
+  nome: string;
+  ordem: number;
+  perguntas: AnamnesisQuestion[];
+}
+
+/**
+ * Um modelo de ficha (você pode ter várias: "Anamnese Lash", "Anamnese
+ * Sobrancelha"...). Categorias e perguntas ficam aninhadas aqui dentro —
+ * é tudo editado e salvo junto na tela do construtor.
+ */
+export interface AnamnesisForm {
+  id: string;
+  nome: string;
+  corFundo: string; // hex, ex.: "#FAF8FB"
+  logoUrl?: string; // pode ser uma URL normal ou um data: URL (upload local)
+  ativo: boolean;
+  categorias: AnamnesisCategory[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AnamnesisResponseStatus = "pendente" | "assinada_cliente" | "concluida";
+
+/** Uma resposta de UM cliente a UMA ficha, criada quando você gera o link. */
+export interface AnamnesisResponse {
+  id: string;
+  formId: string;
+  token: string; // usado na URL pública /anamnese/[token]
+  clientId?: string;
+  respondenteNome?: string;
+  respondenteTelefone?: string;
+  respostas: Record<string, string | string[]>; // key = questionId
+  assinaturaClienteDataUrl?: string;
+  assinaturaClienteEm?: string;
+  assinaturaProfissionalDataUrl?: string;
+  assinaturaProfissionalPor?: string; // nome de quem assinou
+  assinaturaProfissionalEm?: string;
+  status: AnamnesisResponseStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Índice global (não isolado por organização) que resolve um token da URL
+ * pública para a organização/resposta correta — necessário porque o link
+ * é aberto por alguém sem login, então ainda não sabemos a organização.
+ */
+export interface AnamnesisTokenIndex {
+  token: string;
+  organizationId: string;
+  responseId: string;
+  formId: string;
+  createdAt: string;
+}

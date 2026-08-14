@@ -1,4 +1,4 @@
-import type { ClientTag, AppointmentStatus, TransactionType, PipelineStage } from "@/types";
+import type { ClientTag, AppointmentStatus, TransactionType, PipelineStage, QuestionType } from "@/types";
 
 export const CLIENT_TAGS: ClientTag[] = [
   "VIP",
@@ -63,3 +63,13 @@ export const PIPELINE_STAGES: { key: PipelineStage; label: string }[] = [
   { key: "retorno", label: "Retorno" },
   { key: "perdido", label: "Perdido" },
 ];
+
+export const QUESTION_TYPE_LABEL: Record<QuestionType, string> = {
+  texto_curto: "Texto curto",
+  texto_longo: "Texto longo",
+  sim_nao: "Sim / Não",
+  unica_escolha: "Escolha única",
+  multipla_escolha: "Múltipla escolha",
+  data: "Data",
+  numero: "Número",
+};

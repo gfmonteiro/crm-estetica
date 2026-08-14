@@ -10,6 +10,7 @@ import {
   Wallet,
   LogOut,
   KanbanSquare,
+  ClipboardList,
   MessageCircle,
   Package,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/clientes", label: "Clientes", icon: Users },
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/pipeline", label: "Pipeline", icon: KanbanSquare },
+  { href: "/fichas", label: "Fichas", icon: ClipboardList },
   { href: "/procedimentos", label: "Procedimentos", icon: Sparkles },
   { href: "/financeiro", label: "Financeiro", icon: Wallet },
   { href: "/whatsapp", label: "WhatsApp", icon: MessageCircle },
