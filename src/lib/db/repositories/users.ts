@@ -1,32 +1,63 @@
-import { readCollection, writeCollection, generateId } from "../store";
+import { query, queryOne } from "../pg";
 import type { User } from "@/types";
 
-const COLLECTION = "users";
+// Uma linha da tabela `users` (snake_case, como vem do Postgres)
+interface UserRow {
+  id: string;
+  nome: string;
+  email: string;
+  password_hash: string;
+  role: User["role"];
+  organization_id: string | null;
+  created_at: string;
+}
+
+function toUser(row: UserRow): User {
+  return {
+    id: row.id,
+    nome: row.nome,
+    email: row.email,
+    passwordHash: row.password_hash,
+    role: row.role,
+    organizationId: row.organization_id ?? undefined,
+    createdAt: row.created_at,
+  };
+}
 
 export const usersRepository = {
-  findAll(): User[] {
-    return readCollection<User>(COLLECTION);
+  async findAll(): Promise<User[]> {
+    const rows = await query<UserRow>("SELECT * FROM users ORDER BY nome");
+    return rows.map(toUser);
   },
 
-  findByEmail(email: string): User | undefined {
-    return readCollection<User>(COLLECTION).find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
+  async findByEmail(email: string): Promise<User | undefined> {
+    const row = await queryOne<UserRow>(
+      "SELECT * FROM users WHERE lower(email) = lower($1)",
+      [email]
     );
+    return row ? toUser(row) : undefined;
   },
 
-  findById(id: string): User | undefined {
-    return readCollection<User>(COLLECTION).find((u) => u.id === id);
+  async findById(id: string): Promise<User | undefined> {
+    const row = await queryOne<UserRow>("SELECT * FROM users WHERE id = $1", [id]);
+    return row ? toUser(row) : undefined;
   },
 
-  findByOrganization(organizationId: string): User[] {
-    return readCollection<User>(COLLECTION).filter((u) => u.organizationId === organizationId);
+  async findByOrganization(organizationId: string): Promise<User[]> {
+    const rows = await query<UserRow>(
+      "SELECT * FROM users WHERE organization_id = $1 ORDER BY nome",
+      [organizationId]
+    );
+    return rows.map(toUser);
   },
 
-  create(data: Omit<User, "id" | "createdAt">): User {
-    const all = readCollection<User>(COLLECTION);
-    const user: User = { ...data, id: generateId(), createdAt: new Date().toISOString() };
-    all.push(user);
-    writeCollection(COLLECTION, all);
-    return user;
+  async create(data: Omit<User, "id" | "createdAt">): Promise<User> {
+    const row = await queryOne<UserRow>(
+      `INSERT INTO users (nome, email, password_hash, role, organization_id)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [data.nome, data.email, data.passwordHash, data.role, data.organizationId ?? null]
+    );
+    return toUser(row!);
   },
 };

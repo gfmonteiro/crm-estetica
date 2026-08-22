@@ -20,11 +20,13 @@ export async function GET() {
   const session = await requireMasterSession();
   if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
 
-  const orgs = organizationsRepository.findAll();
-  const withUserCount = orgs.map((org) => ({
-    ...org,
-    userCount: usersRepository.findByOrganization(org.id).length,
-  }));
+  const orgs = await organizationsRepository.findAll();
+  const withUserCount = await Promise.all(
+    orgs.map(async (org) => ({
+      ...org,
+      userCount: (await usersRepository.findByOrganization(org.id)).length,
+    }))
+  );
   return NextResponse.json(withUserCount);
 }
 
@@ -38,14 +40,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  if (usersRepository.findByEmail(parsed.data.ownerEmail)) {
+  if (await usersRepository.findByEmail(parsed.data.ownerEmail)) {
     return NextResponse.json(
       { error: "Já existe um usuário com este e-mail de acesso." },
       { status: 409 }
     );
   }
 
-  const org = organizationsRepository.create({
+  const org = await organizationsRepository.create({
     nome: parsed.data.nome,
     tipoNegocio: parsed.data.tipoNegocio,
     email: parsed.data.email,
@@ -55,7 +57,7 @@ export async function POST(request: Request) {
   });
 
   const passwordHash = await hashPassword(parsed.data.ownerPassword);
-  const owner = usersRepository.create({
+  const owner = await usersRepository.create({
     nome: parsed.data.ownerNome,
     email: parsed.data.ownerEmail,
     passwordHash,

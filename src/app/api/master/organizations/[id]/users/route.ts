@@ -16,14 +16,14 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
 
   const { id } = await params;
-  const users = usersRepository.findByOrganization(id).map((u) => ({
+  const orgUsers = (await usersRepository.findByOrganization(id)).map((u) => ({
     id: u.id,
     nome: u.nome,
     email: u.email,
     role: u.role,
     createdAt: u.createdAt,
   }));
-  return NextResponse.json(users);
+  return NextResponse.json(orgUsers);
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -37,12 +37,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  if (usersRepository.findByEmail(parsed.data.email)) {
+  if (await usersRepository.findByEmail(parsed.data.email)) {
     return NextResponse.json({ error: "Já existe um usuário com este e-mail." }, { status: 409 });
   }
 
   const passwordHash = await hashPassword(parsed.data.password);
-  const user = usersRepository.create({
+  const user = await usersRepository.create({
     nome: parsed.data.nome,
     email: parsed.data.email,
     passwordHash,

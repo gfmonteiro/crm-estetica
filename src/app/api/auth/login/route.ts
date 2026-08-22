@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 
   const { email, password } = parsed.data;
-  const user = usersRepository.findByEmail(email);
+  const user = await usersRepository.findByEmail(email);
   if (!user) {
     return NextResponse.json({ error: "E-mail ou senha incorretos" }, { status: 401 });
   }
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
   let organizationName: string | undefined;
   if (user.organizationId) {
-    const org = organizationsRepository.findById(user.organizationId);
+    const org = await organizationsRepository.findById(user.organizationId);
     if (!org) {
       return NextResponse.json({ error: "Organização não encontrada" }, { status: 403 });
     }
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   const response = NextResponse.json({ ok: true, role: user.role });
   response.cookies.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,

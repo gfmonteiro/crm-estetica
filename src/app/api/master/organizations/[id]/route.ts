@@ -8,7 +8,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   const { id } = await params;
   const body = await request.json();
-  const updated = organizationsRepository.update(id, body);
+  const updated = await organizationsRepository.update(id, body);
   if (!updated) return NextResponse.json({ error: "Organização não encontrada" }, { status: 404 });
   return NextResponse.json(updated);
 }
@@ -18,7 +18,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
 
   const { id } = await params;
-  const ok = organizationsRepository.delete(id);
+  const ok = await organizationsRepository.delete(id);
   if (!ok) return NextResponse.json({ error: "Organização não encontrada" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

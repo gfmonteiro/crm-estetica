@@ -1,0 +1,26 @@
+[
+  {
+    "id": "339cc6a2-7361-422e-9756-22bc3ad07405",
+    "nome": "Testes",
+    "corFundo": "#ab97b4",
+    "ativo": true,
+    "categorias": [
+      {
+        "id": "4oe48ovm",
+        "nome": "Nova categoria",
+        "ordem": 0,
+        "perguntas": [
+          {
+            "id": "7ot50q01",
+            "texto": "testesssssss",
+            "tipo": "texto_curto",
+            "obrigatoria": true,
+            "ordem": 0
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T03:49:03.618Z",
+    "updatedAt": "2026-08-14T03:49:39.528Z"
+  }
+]
