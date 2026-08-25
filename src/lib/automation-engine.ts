@@ -14,24 +14,23 @@ function daysBetween(a: Date, b: Date): number {
 }
 
 /**
- * Executa as regras ativas de UMA organizaÃ§Ã£o contra os atendimentos
- * concluÃ­dos ("compareceu"). Isolado por organizationId â€” nunca mistura
- * regras/clientes de negÃ³cios diferentes.
+ * Executa as regras ativas de UMA organização contra os atendimentos
+ * concluídos ("compareceu"). Isolado por organizationId ? nunca mistura
+ * regras/clientes de negócios diferentes.
  */
 export async function runAutomationRules(organizationId: string): Promise<WhatsAppLogEntry[]> {
-  const rules = automationRulesRepository.findActive(organizationId);
+  const rules = await automationRulesRepository.findActive(organizationId);
   if (rules.length === 0) return [];
 
-  const settings = whatsappSettingsRepository.get(organizationId);
+  const settings = await whatsappSettingsRepository.get(organizationId);
   const alreadySent = new Set(
-    whatsappLogRepository.findAll(organizationId).map((l) => `${l.ruleId}:${l.appointmentId}`)
+    (await whatsappLogRepository.findAll(organizationId)).map((l) => `${l.ruleId}:${l.appointmentId}`)
   );
 
-  const appointments = appointmentsRepository
-    .findAll(organizationId)
+  const appointments = (await appointmentsRepository.findAll(organizationId))
     .filter((a) => a.status === "compareceu");
-  const clients = clientsRepository.findAll(organizationId);
-  const procedures = proceduresRepository.findAll(organizationId);
+  const clients = await clientsRepository.findAll(organizationId);
+  const procedures = await proceduresRepository.findAll(organizationId);
   const clientById = new Map(clients.map((c) => [c.id, c]));
   const procedureById = new Map(procedures.map((p) => [p.id, p]));
 
@@ -56,7 +55,7 @@ export async function runAutomationRules(organizationId: string): Promise<WhatsA
 
       let status: WhatsAppLogEntry["status"] = "simulado";
       let detalhe =
-        "Sem credenciais do WhatsApp configuradas â€” envio simulado (nÃ£o enviado de verdade).";
+        "Sem credenciais do WhatsApp configuradas ? envio simulado (não enviado de verdade).";
 
       if (settings?.phoneNumberId && settings?.accessToken) {
         const result = await sendWhatsAppMessage(
@@ -69,7 +68,7 @@ export async function runAutomationRules(organizationId: string): Promise<WhatsA
         detalhe = result.detail;
       }
 
-      const entry = whatsappLogRepository.add(organizationId, {
+      const entry = await whatsappLogRepository.add(organizationId, {
         ruleId: rule.id,
         ruleName: rule.nome,
         clientId: client.id,

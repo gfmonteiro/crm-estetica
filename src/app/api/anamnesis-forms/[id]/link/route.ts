@@ -12,11 +12,11 @@ const schema = z.object({
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const { id } = await params;
-  const form = anamnesisFormsRepository.findById(session.organizationId, id);
-  if (!form) return NextResponse.json({ error: "Ficha nÃ£o encontrada" }, { status: 404 });
+  const form = await anamnesisFormsRepository.findById(session.organizationId, id);
+  if (!form) return NextResponse.json({ error: "Ficha não encontrada" }, { status: 404 });
   if (form.categorias.every((c) => c.perguntas.length === 0)) {
     return NextResponse.json(
       { error: "Adicione ao menos uma pergunta antes de gerar o link." },
@@ -27,7 +27,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const body = await request.json().catch(() => ({}));
   const parsed = schema.safeParse(body);
 
-  const response = anamnesisResponsesRepository.create(session.organizationId, {
+  const response = await anamnesisResponsesRepository.create(session.organizationId, {
     formId: id,
     ...parsed.data,
   });

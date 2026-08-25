@@ -10,9 +10,9 @@ const schema = z.object({
 
 export async function GET() {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N�o autenticado" }, { status: 401 });
 
-  const settings = whatsappSettingsRepository.get(session.organizationId);
+  const settings = await whatsappSettingsRepository.get(session.organizationId);
   if (!settings) return NextResponse.json(null);
   return NextResponse.json({
     phoneNumberId: settings.phoneNumberId,
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N�o autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = schema.safeParse(body);
@@ -32,10 +32,10 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const current = whatsappSettingsRepository.get(session.organizationId);
+  const current = await whatsappSettingsRepository.get(session.organizationId);
   const accessToken = parsed.data.accessToken || current?.accessToken || "";
 
-  const saved = whatsappSettingsRepository.save(session.organizationId, {
+  const saved = await whatsappSettingsRepository.save(session.organizationId, {
     phoneNumberId: parsed.data.phoneNumberId,
     accessToken,
   });
@@ -48,6 +48,6 @@ export async function PUT(request: Request) {
 }
 
 function maskToken(token: string): string {
-  if (token.length <= 8) return "••••••••";
-  return `${token.slice(0, 4)}••••••••${token.slice(-4)}`;
+  if (token.length <= 8) return "????????";
+  return `${token.slice(0, 4)}????????${token.slice(-4)}`;
 }

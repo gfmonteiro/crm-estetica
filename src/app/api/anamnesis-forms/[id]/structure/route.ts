@@ -31,7 +31,7 @@ const schema = z.object({ categorias: z.array(categorySchema) });
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const { id } = await params;
   const body = await request.json();
@@ -40,11 +40,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const updated = anamnesisFormsRepository.updateStructure(
+  const updated = await anamnesisFormsRepository.updateStructure(
     session.organizationId,
     id,
     parsed.data.categorias
   );
-  if (!updated) return NextResponse.json({ error: "Ficha nÃ£o encontrada" }, { status: 404 });
+  if (!updated) return NextResponse.json({ error: "Ficha não encontrada" }, { status: 404 });
   return NextResponse.json(updated);
 }

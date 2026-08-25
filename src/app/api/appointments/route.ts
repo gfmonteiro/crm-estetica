@@ -17,7 +17,7 @@ const schema = z.object({
 
 export async function GET(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const { searchParams } = new URL(request.url);
   const start = searchParams.get("start");
@@ -25,21 +25,21 @@ export async function GET(request: Request) {
 
   if (start && end) {
     return NextResponse.json(
-      appointmentsRepository.findByDateRange(session.organizationId, start, end)
+      await appointmentsRepository.findByDateRange(session.organizationId, start, end)
     );
   }
-  return NextResponse.json(appointmentsRepository.findAll(session.organizationId));
+  return NextResponse.json(await appointmentsRepository.findAll(session.organizationId));
 }
 
 export async function POST(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
-  const appointment = appointmentsRepository.create(session.organizationId, parsed.data);
+  const appointment = await appointmentsRepository.create(session.organizationId, parsed.data);
   return NextResponse.json(appointment, { status: 201 });
 }

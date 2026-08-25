@@ -5,5 +5,5 @@ import { requireOrgSession } from "@/lib/session";
 export async function GET() {
   const session = await requireOrgSession();
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
-  return NextResponse.json(getDashboardStats(session.organizationId));
+  return NextResponse.json(await getDashboardStats(session.organizationId));
 }

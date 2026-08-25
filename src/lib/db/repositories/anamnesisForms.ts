@@ -1,81 +1,201 @@
-import { readOrgCollection, writeOrgCollection, generateId } from "../store";
+import { query, queryOne } from "../pg";
 import type { AnamnesisForm, AnamnesisCategory, AnamnesisQuestion } from "@/types";
 
-const COLLECTION = "anamnesis_forms";
+interface FormRow {
+  id: string;
+  organization_id: string;
+  nome: string;
+  cor_fundo: string;
+  logo_url: string | null;
+  ativo: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CategoryRow {
+  id: string;
+  organization_id: string;
+  form_id: string;
+  nome: string;
+  ordem: number;
+}
+
+interface QuestionRow {
+  id: string;
+  organization_id: string;
+  category_id: string;
+  texto: string;
+  tipo: AnamnesisQuestion["tipo"];
+  opcoes: string[] | null;
+  obrigatoria: boolean;
+  ordem: number;
+}
+
+/**
+ * Monta o AnamnesisForm completo com categorias e perguntas aninhadas,
+ * usando queries separadas. O schema relacional armazena em tabelas
+ * separadas, mas a interface do app espera tudo aninhado.
+ */
+async function buildFullForm(row: FormRow, organizationId: string): Promise<AnamnesisForm> {
+  const catRows = await query<CategoryRow>(
+    "SELECT * FROM anamnesis_categories WHERE form_id = $1 AND organization_id = $2 ORDER BY ordem",
+    [row.id, organizationId]
+  );
+
+  const categorias: AnamnesisCategory[] = [];
+
+  for (const cat of catRows) {
+    const qRows = await query<QuestionRow>(
+      "SELECT * FROM anamnesis_questions WHERE category_id = $1 AND organization_id = $2 ORDER BY ordem",
+      [cat.id, organizationId]
+    );
+    const perguntas: AnamnesisQuestion[] = qRows.map((q) => ({
+      id: q.id,
+      texto: q.texto,
+      tipo: q.tipo,
+      opcoes: q.opcoes ?? undefined,
+      obrigatoria: q.obrigatoria,
+      ordem: q.ordem,
+    }));
+    categorias.push({
+      id: cat.id,
+      nome: cat.nome,
+      ordem: cat.ordem,
+      perguntas,
+    });
+  }
+
+  return {
+    id: row.id,
+    nome: row.nome,
+    corFundo: row.cor_fundo,
+    logoUrl: row.logo_url ?? undefined,
+    ativo: row.ativo,
+    categorias,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
 
 export const anamnesisFormsRepository = {
-  findAll(organizationId: string): AnamnesisForm[] {
-    return readOrgCollection<AnamnesisForm>(organizationId, COLLECTION).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  async findAll(organizationId: string): Promise<AnamnesisForm[]> {
+    const rows = await query<FormRow>(
+      "SELECT * FROM anamnesis_forms WHERE organization_id = $1 ORDER BY created_at DESC",
+      [organizationId]
     );
+    const forms: AnamnesisForm[] = [];
+    for (const row of rows) {
+      forms.push(await buildFullForm(row, organizationId));
+    }
+    return forms;
   },
 
-  findById(organizationId: string, id: string): AnamnesisForm | undefined {
-    return readOrgCollection<AnamnesisForm>(organizationId, COLLECTION).find((f) => f.id === id);
+  async findById(organizationId: string, id: string): Promise<AnamnesisForm | undefined> {
+    const row = await queryOne<FormRow>(
+      "SELECT * FROM anamnesis_forms WHERE organization_id = $1 AND id = $2",
+      [organizationId, id]
+    );
+    if (!row) return undefined;
+    return buildFullForm(row, organizationId);
   },
 
-  create(
+  async create(
     organizationId: string,
     data: { nome: string; corFundo: string; logoUrl?: string }
-  ): AnamnesisForm {
-    const all = readOrgCollection<AnamnesisForm>(organizationId, COLLECTION);
-    const now = new Date().toISOString();
-    const form: AnamnesisForm = {
-      id: generateId(),
-      nome: data.nome,
-      corFundo: data.corFundo,
-      logoUrl: data.logoUrl,
-      ativo: true,
-      categorias: [],
-      createdAt: now,
-      updatedAt: now,
-    };
-    all.push(form);
-    writeOrgCollection(organizationId, COLLECTION, all);
-    return form;
+  ): Promise<AnamnesisForm> {
+    const row = await queryOne<FormRow>(
+      `INSERT INTO anamnesis_forms (organization_id, nome, cor_fundo, logo_url)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [organizationId, data.nome, data.corFundo, data.logoUrl ?? null]
+    );
+    return buildFullForm(row!, organizationId);
   },
 
-  // Atualização "rasa" — nome, cor, logo, ativo (não mexe em categorias/perguntas).
-  update(
+  async update(
     organizationId: string,
     id: string,
     data: Partial<Pick<AnamnesisForm, "nome" | "corFundo" | "logoUrl" | "ativo">>
-  ): AnamnesisForm | undefined {
-    const all = readOrgCollection<AnamnesisForm>(organizationId, COLLECTION);
-    const idx = all.findIndex((f) => f.id === id);
-    if (idx === -1) return undefined;
-    all[idx] = { ...all[idx], ...data, updatedAt: new Date().toISOString() };
-    writeOrgCollection(organizationId, COLLECTION, all);
-    return all[idx];
+  ): Promise<AnamnesisForm | undefined> {
+    const current = await queryOne<FormRow>(
+      "SELECT * FROM anamnesis_forms WHERE organization_id = $1 AND id = $2",
+      [organizationId, id]
+    );
+    if (!current) return undefined;
+
+    const nome = data.nome ?? current.nome;
+    const corFundo = data.corFundo ?? current.cor_fundo;
+    const logoUrl = data.logoUrl !== undefined ? data.logoUrl : current.logo_url;
+    const ativo = data.ativo !== undefined ? data.ativo : current.ativo;
+
+    const row = await queryOne<FormRow>(
+      `UPDATE anamnesis_forms SET nome = $1, cor_fundo = $2, logo_url = $3, ativo = $4
+       WHERE organization_id = $5 AND id = $6
+       RETURNING *`,
+      [nome, corFundo, logoUrl ?? null, ativo, organizationId, id]
+    );
+    return row ? buildFullForm(row, organizationId) : undefined;
   },
 
-  // Substitui a árvore inteira de categorias/perguntas — é assim que o
-  // construtor salva (sempre manda a estrutura completa e atualizada).
-  updateStructure(
+  /**
+   * Substitui a �rvore inteira de categorias/perguntas. Remove tudo que
+   * existia e insere a nova estrutura ? assim o construtor de fichas pode
+   * enviar a �rvore completa de uma vez.
+   */
+  async updateStructure(
     organizationId: string,
     id: string,
     categorias: AnamnesisCategory[]
-  ): AnamnesisForm | undefined {
-    const all = readOrgCollection<AnamnesisForm>(organizationId, COLLECTION);
-    const idx = all.findIndex((f) => f.id === id);
-    if (idx === -1) return undefined;
-    all[idx] = { ...all[idx], categorias, updatedAt: new Date().toISOString() };
-    writeOrgCollection(organizationId, COLLECTION, all);
-    return all[idx];
+  ): Promise<AnamnesisForm | undefined> {
+    const current = await queryOne<FormRow>(
+      "SELECT * FROM anamnesis_forms WHERE organization_id = $1 AND id = $2",
+      [organizationId, id]
+    );
+    if (!current) return undefined;
+
+    // Remove categorias antigas (CASCADE remove perguntas automaticamente)
+    await query(
+      "DELETE FROM anamnesis_categories WHERE form_id = $1 AND organization_id = $2",
+      [id, organizationId]
+    );
+
+    // Insere nova estrutura
+    for (const cat of categorias) {
+      await queryOne(
+        `INSERT INTO anamnesis_categories (id, organization_id, form_id, nome, ordem)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [cat.id, organizationId, id, cat.nome, cat.ordem]
+      );
+      for (const q of cat.perguntas) {
+        await queryOne(
+          `INSERT INTO anamnesis_questions
+             (id, organization_id, category_id, texto, tipo, opcoes, obrigatoria, ordem)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [q.id, organizationId, cat.id, q.texto, q.tipo, q.opcoes ?? null, q.obrigatoria, q.ordem]
+        );
+      }
+    }
+
+    // Atualiza updated_at do form
+    const row = await queryOne<FormRow>(
+      "UPDATE anamnesis_forms SET updated_at = now() WHERE id = $1 RETURNING *",
+      [id]
+    );
+    return row ? buildFullForm(row, organizationId) : undefined;
   },
 
-  delete(organizationId: string, id: string): boolean {
-    const all = readOrgCollection<AnamnesisForm>(organizationId, COLLECTION);
-    const next = all.filter((f) => f.id !== id);
-    if (next.length === all.length) return false;
-    writeOrgCollection(organizationId, COLLECTION, next);
-    return true;
+  async delete(organizationId: string, id: string): Promise<boolean> {
+    const rows = await query(
+      "DELETE FROM anamnesis_forms WHERE organization_id = $1 AND id = $2 RETURNING id",
+      [organizationId, id]
+    );
+    return rows.length > 0;
   },
 };
 
-// Helpers de construção usados pela API ao criar categoria/pergunta avulsa
+// Helpers de constru��o usados pela API ao criar categoria/pergunta avulsa
 export function createEmptyCategory(nome: string, ordem: number): AnamnesisCategory {
-  return { id: generateId(), nome, ordem, perguntas: [] };
+  return { id: crypto.randomUUID(), nome, ordem, perguntas: [] };
 }
 
 export function createEmptyQuestion(
@@ -85,5 +205,5 @@ export function createEmptyQuestion(
   obrigatoria: boolean,
   opcoes?: string[]
 ): AnamnesisQuestion {
-  return { id: generateId(), texto, tipo, ordem, obrigatoria, opcoes };
+  return { id: crypto.randomUUID(), texto, tipo, ordem, obrigatoria, opcoes };
 }

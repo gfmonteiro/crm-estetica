@@ -4,22 +4,22 @@ import { anamnesisTokenIndexRepository, anamnesisResponsesRepository } from "@/l
 import { anamnesisFormsRepository } from "@/lib/db/repositories/anamnesisForms";
 
 /**
- * Rota p√∫blica ‚Äî usada pelo link que a cliente recebe (sem login). Seguran√ßa
- * aqui √© "capability token": s√≥ quem tem o link consegue acessar essa
- * resposta espec√≠fica, ningu√©m navega/lista isso de fora.
+ * Rota p˙blica ? usada pelo link que a cliente recebe (sem login). SeguranÁa
+ * aqui È "capability token": sÛ quem tem o link consegue acessar essa
+ * resposta especÌfica, ninguÈm navega/lista isso de fora.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const index = anamnesisTokenIndexRepository.resolve(token);
-  if (!index) return NextResponse.json({ error: "Link inv√°lido ou expirado" }, { status: 404 });
+  const index = await anamnesisTokenIndexRepository.resolve(token);
+  if (!index) return NextResponse.json({ error: "Link inv·lido ou expirado" }, { status: 404 });
 
-  const form = anamnesisFormsRepository.findById(index.organizationId, index.formId);
-  const response = anamnesisResponsesRepository.findById(index.organizationId, index.responseId);
+  const form = await anamnesisFormsRepository.findById(index.organizationId, index.formId);
+  const response = await anamnesisResponsesRepository.findById(index.organizationId, index.responseId);
   if (!form || !response) {
-    return NextResponse.json({ error: "Link inv√°lido ou expirado" }, { status: 404 });
+    return NextResponse.json({ error: "Link inv·lido ou expirado" }, { status: 404 });
   }
   if (!form.ativo) {
-    return NextResponse.json({ error: "Esta ficha n√£o est√° mais dispon√≠vel." }, { status: 410 });
+    return NextResponse.json({ error: "Esta ficha n„o est· mais disponÌvel." }, { status: 410 });
   }
 
   return NextResponse.json({ form, response });
@@ -34,13 +34,13 @@ const schema = z.object({
 
 export async function POST(request: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const index = anamnesisTokenIndexRepository.resolve(token);
-  if (!index) return NextResponse.json({ error: "Link inv√°lido ou expirado" }, { status: 404 });
+  const index = await anamnesisTokenIndexRepository.resolve(token);
+  if (!index) return NextResponse.json({ error: "Link inv·lido ou expirado" }, { status: 404 });
 
-  const existing = anamnesisResponsesRepository.findById(index.organizationId, index.responseId);
-  if (!existing) return NextResponse.json({ error: "Link inv√°lido ou expirado" }, { status: 404 });
+  const existing = await anamnesisResponsesRepository.findById(index.organizationId, index.responseId);
+  if (!existing) return NextResponse.json({ error: "Link inv·lido ou expirado" }, { status: 404 });
   if (existing.status !== "pendente") {
-    return NextResponse.json({ error: "Esta ficha j√° foi respondida." }, { status: 409 });
+    return NextResponse.json({ error: "Esta ficha j· foi respondida." }, { status: 409 });
   }
 
   const body = await request.json();
@@ -49,7 +49,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const updated = anamnesisResponsesRepository.update(index.organizationId, index.responseId, {
+  const updated = await anamnesisResponsesRepository.update(index.organizationId, index.responseId, {
     respondenteNome: parsed.data.respondenteNome,
     respondenteTelefone: parsed.data.respondenteTelefone,
     respostas: parsed.data.respostas,
