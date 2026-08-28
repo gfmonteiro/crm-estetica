@@ -6,8 +6,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("demo@studio.com");
-  const [password, setPassword] = useState("demo1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
           </button>
 
           <p className="mt-4 text-center text-xs text-muted">
-            Acesso demo pré-preenchido — é só clicar em Entrar.
+            <a href="">Esqueceu sua Senha?</a>
           </p>
         </form>
       </div>
