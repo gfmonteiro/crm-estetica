@@ -1,5 +1,5 @@
 import { query, queryOne } from "../pg";
-import type { Client } from "@/types";
+import type { Client, ClientTag } from "@/types";
 
 interface ClientRow {
   id: string;
@@ -41,7 +41,7 @@ function toClient(row: ClientRow): Client {
     profissao: row.profissao ?? undefined,
     observacoes: row.observacoes ?? undefined,
     status: row.status,
-    tags: row.tags ?? [],
+    tags: (row.tags ?? []) as ClientTag[],
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     deletedAt: row.deleted_at,
