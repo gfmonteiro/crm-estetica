@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY não configurada. Defina no .env");
+  }
+  return new Resend(apiKey);
+}
 
 const EMAIL_FROM = process.env.EMAIL_FROM || "onboarding@resend.dev";
 
@@ -11,6 +17,7 @@ interface SendEmailOptions {
 }
 
 export async function sendEmail({ to, subject, html }: SendEmailOptions) {
+  const resend = getResendClient();
   const { error } = await resend.emails.send({
     from: EMAIL_FROM,
     to,
