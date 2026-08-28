@@ -6,11 +6,11 @@ import { requireOrgSession } from "@/lib/session";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
 
   const { id } = await params;
   const client = await clientsRepository.findById(session.organizationId, id);
-  if (!client) return NextResponse.json({ error: "Cliente n„o encontrado" }, { status: 404 });
+  if (!client) return NextResponse.json({ error: "Cliente n√£o encontrado" }, { status: 404 });
 
   const appointments = await appointmentsRepository.findByClient(session.organizationId, id);
   const transactions = await transactionsRepository.findByClient(session.organizationId, id);
@@ -20,21 +20,21 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
 
   const { id } = await params;
   const body = await request.json();
   const updated = await clientsRepository.update(session.organizationId, id, body);
-  if (!updated) return NextResponse.json({ error: "Cliente n„o encontrado" }, { status: 404 });
+  if (!updated) return NextResponse.json({ error: "Cliente n√£o encontrado" }, { status: 404 });
   return NextResponse.json(updated);
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
 
   const { id } = await params;
   const ok = await clientsRepository.softDelete(session.organizationId, id);
-  if (!ok) return NextResponse.json({ error: "Cliente n„o encontrado" }, { status: 404 });
+  if (!ok) return NextResponse.json({ error: "Cliente n√£o encontrado" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

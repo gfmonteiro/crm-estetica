@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Dados inv�lidos" },
+      { error: "Dados inválidos" },
       { status: 400 }
     );
   }
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   const resetToken = await passwordResetTokensRepository.findValidToken(token);
   if (!resetToken) {
     return NextResponse.json(
-      { error: "Link inválido ou expirado. Solicite uma nova redefinição." },
+      { error: "Link invÃ¡lido ou expirado. Solicite uma nova redefiniÃ§Ã£o." },
       { status: 400 }
     );
   }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   const user = await usersRepository.findById(resetToken.userId);
   if (!user) {
     return NextResponse.json(
-      { error: "Usuário não encontrado" },
+      { error: "UsuÃ¡rio nÃ£o encontrado" },
       { status: 400 }
     );
   }

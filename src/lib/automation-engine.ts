@@ -14,9 +14,9 @@ function daysBetween(a: Date, b: Date): number {
 }
 
 /**
- * Executa as regras ativas de UMA organização contra os atendimentos
- * concluídos ("compareceu"). Isolado por organizationId ? nunca mistura
- * regras/clientes de negócios diferentes.
+ * Executa as regras ativas de UMA organizaÃ§Ã£o contra os atendimentos
+ * concluÃ­dos ("compareceu"). Isolado por organizationId ? nunca mistura
+ * regras/clientes de negÃ³cios diferentes.
  */
 export async function runAutomationRules(organizationId: string): Promise<WhatsAppLogEntry[]> {
   const rules = await automationRulesRepository.findActive(organizationId);
@@ -55,7 +55,7 @@ export async function runAutomationRules(organizationId: string): Promise<WhatsA
 
       let status: WhatsAppLogEntry["status"] = "simulado";
       let detalhe =
-        "Sem credenciais do WhatsApp configuradas ? envio simulado (não enviado de verdade).";
+        "Sem credenciais do WhatsApp configuradas ? envio simulado (nÃ£o enviado de verdade).";
 
       if (settings?.phoneNumberId && settings?.accessToken) {
         const result = await sendWhatsAppMessage(

@@ -5,7 +5,7 @@ import type { SessionUser } from "@/types";
 
 const SECRET = process.env.JWT_SECRET || (() => {
   if (process.env.NODE_ENV === "production") {
-    throw new Error("JWT_SECRET n„o configurado. Defina esta vari·vel de ambiente antes de rodar em produÁ„o.");
+    throw new Error("JWT_SECRET n√£o configurado. Defina esta vari√°vel de ambiente antes de rodar em produ√ß√£o.");
   }
   return "dev-secret-troque-em-producao";
 })();

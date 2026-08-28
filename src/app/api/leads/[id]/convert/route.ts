@@ -5,12 +5,12 @@ import { requireOrgSession } from "@/lib/session";
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
   const orgId = session.organizationId;
 
   const { id } = await params;
   const lead = await leadsRepository.findById(orgId, id);
-  if (!lead) return NextResponse.json({ error: "Lead n„o encontrado" }, { status: 404 });
+  if (!lead) return NextResponse.json({ error: "Lead n√£o encontrado" }, { status: 404 });
 
   if (lead.clientId) {
     const existing = await clientsRepository.findById(orgId, lead.clientId);

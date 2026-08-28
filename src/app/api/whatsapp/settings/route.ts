@@ -10,7 +10,7 @@ const schema = z.object({
 
 export async function GET() {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
 
   const settings = await whatsappSettingsRepository.get(session.organizationId);
   if (!settings) return NextResponse.json(null);
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = schema.safeParse(body);

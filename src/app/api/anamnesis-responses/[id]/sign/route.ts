@@ -7,14 +7,14 @@ const schema = z.object({ assinaturaDataUrl: z.string().min(1) });
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
 
   const { id } = await params;
   const response = await anamnesisResponsesRepository.findById(session.organizationId, id);
-  if (!response) return NextResponse.json({ error: "Resposta n„o encontrada" }, { status: 404 });
+  if (!response) return NextResponse.json({ error: "Resposta n√£o encontrada" }, { status: 404 });
   if (response.status !== "assinada_cliente") {
     return NextResponse.json(
-      { error: "A cliente ainda n„o assinou esta ficha." },
+      { error: "A cliente ainda n√£o assinou esta ficha." },
       { status: 400 }
     );
   }
@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const body = await request.json();
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Assinatura inv·lida" }, { status: 400 });
+    return NextResponse.json({ error: "Assinatura inv√°lida" }, { status: 400 });
   }
 
   const updated = await anamnesisResponsesRepository.update(session.organizationId, id, {

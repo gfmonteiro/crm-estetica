@@ -4,10 +4,10 @@ import { requireOrgSession } from "@/lib/session";
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
 
   const { id } = await params;
   const ok = await transactionsRepository.delete(session.organizationId, id);
-  if (!ok) return NextResponse.json({ error: "LanÁamento n„o encontrado" }, { status: 404 });
+  if (!ok) return NextResponse.json({ error: "Lan√ßamento n√£o encontrado" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

@@ -4,8 +4,8 @@ import { clientsRepository } from "@/lib/db/repositories/clients";
 import { requireOrgSession } from "@/lib/session";
 
 const clientSchema = z.object({
-  nome: z.string().min(2, "Nome é obrigatório"),
-  telefone: z.string().min(8, "Telefone é obrigatório"),
+  nome: z.string().min(2, "Nome Ã© obrigatÃ³rio"),
+  telefone: z.string().min(8, "Telefone Ã© obrigatÃ³rio"),
   whatsapp: z.string().optional(),
   email: z.string().email().optional().or(z.literal("")),
   cpf: z.string().optional(),
@@ -23,7 +23,7 @@ const clientSchema = z.object({
 
 export async function GET(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
 
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.toLowerCase().trim();
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = clientSchema.safeParse(body);

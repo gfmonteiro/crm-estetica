@@ -11,13 +11,13 @@ const schema = z.object({
 
 export async function GET() {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
   return NextResponse.json(await anamnesisFormsRepository.findAll(session.organizationId));
 }
 
 export async function POST(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = schema.safeParse(body);

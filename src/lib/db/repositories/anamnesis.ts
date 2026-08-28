@@ -134,9 +134,9 @@ export const anamnesisResponsesRepository = {
 };
 
 /**
- * Resolve um token p˙blico para a organizaÁ„o/resposta correta.
- * N„o precisa mais de um "Ìndice global" separado ? o token È UNIQUE na
- * tabela anamnesis_responses, ent„o basta buscar direto l·.
+ * Resolve um token p√∫blico para a organiza√ß√£o/resposta correta.
+ * N√£o precisa mais de um "√≠ndice global" separado ? o token √© UNIQUE na
+ * tabela anamnesis_responses, ent√£o basta buscar direto l√°.
  */
 export const anamnesisTokenIndexRepository = {
   async resolve(token: string): Promise<AnamnesisTokenIndex | undefined> {

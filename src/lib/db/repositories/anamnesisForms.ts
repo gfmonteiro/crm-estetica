@@ -138,9 +138,9 @@ export const anamnesisFormsRepository = {
   },
 
   /**
-   * Substitui a árvore inteira de categorias/perguntas. Remove tudo que
+   * Substitui a Ã¡rvore inteira de categorias/perguntas. Remove tudo que
    * existia e insere a nova estrutura ? assim o construtor de fichas pode
-   * enviar a árvore completa de uma vez.
+   * enviar a Ã¡rvore completa de uma vez.
    */
   async updateStructure(
     organizationId: string,
@@ -193,7 +193,7 @@ export const anamnesisFormsRepository = {
   },
 };
 
-// Helpers de construção usados pela API ao criar categoria/pergunta avulsa
+// Helpers de construÃ§Ã£o usados pela API ao criar categoria/pergunta avulsa
 export function createEmptyCategory(nome: string, ordem: number): AnamnesisCategory {
   return { id: crypto.randomUUID(), nome, ordem, perguntas: [] };
 }
