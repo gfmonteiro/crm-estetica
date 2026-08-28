@@ -53,7 +53,7 @@ export const clientsRepository = {
     const rows = await query<ClientRow>(
       `SELECT * FROM clients
        WHERE organization_id = $1 AND deleted_at IS NULL
-       ORDER BY nome COLLATE "pt_BR"`,
+       ORDER BY nome`,
       [organizationId]
     );
     return rows.map(toClient);
