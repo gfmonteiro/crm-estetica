@@ -10,10 +10,10 @@ function isSameDay(a: Date, b: Date) {
   );
 }
 
-export function getDashboardStats(organizationId: string) {
-  const clients = clientsRepository.findAll(organizationId);
-  const appointments = appointmentsRepository.findAll(organizationId);
-  const transactions = transactionsRepository.findAll(organizationId);
+export async function getDashboardStats(organizationId: string) {
+  const clients = await clientsRepository.findAll(organizationId);
+  const appointments = await appointmentsRepository.findAll(organizationId);
+  const transactions = await transactionsRepository.findAll(organizationId);
 
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);

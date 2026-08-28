@@ -11,19 +11,19 @@ const schema = z.object({
 
 export async function GET() {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
-  return NextResponse.json(anamnesisFormsRepository.findAll(session.organizationId));
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  return NextResponse.json(await anamnesisFormsRepository.findAll(session.organizationId));
 }
 
 export async function POST(request: Request) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "NÃ£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const body = await request.json();
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
-  const form = anamnesisFormsRepository.create(session.organizationId, parsed.data);
+  const form = await anamnesisFormsRepository.create(session.organizationId, parsed.data);
   return NextResponse.json(form, { status: 201 });
 }

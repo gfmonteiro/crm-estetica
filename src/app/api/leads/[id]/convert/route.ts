@@ -5,19 +5,19 @@ import { requireOrgSession } from "@/lib/session";
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireOrgSession();
-  if (!session) return NextResponse.json({ error: "N√£o autenticado" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "N„o autenticado" }, { status: 401 });
   const orgId = session.organizationId;
 
   const { id } = await params;
-  const lead = leadsRepository.findById(orgId, id);
-  if (!lead) return NextResponse.json({ error: "Lead n√£o encontrado" }, { status: 404 });
+  const lead = await leadsRepository.findById(orgId, id);
+  if (!lead) return NextResponse.json({ error: "Lead n„o encontrado" }, { status: 404 });
 
   if (lead.clientId) {
-    const existing = clientsRepository.findById(orgId, lead.clientId);
+    const existing = await clientsRepository.findById(orgId, lead.clientId);
     if (existing) return NextResponse.json({ client: existing });
   }
 
-  const client = clientsRepository.create(orgId, {
+  const client = await clientsRepository.create(orgId, {
     nome: lead.nome,
     telefone: lead.telefone,
     whatsapp: lead.telefone,
@@ -28,8 +28,8 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     tags: ["Primeira visita"],
   });
 
-  leadsRepository.update(orgId, id, { clientId: client.id });
-  leadActivitiesRepository.add(orgId, id, `Convertido em cliente (${client.nome})`);
+  await leadsRepository.update(orgId, id, { clientId: client.id });
+  await leadActivitiesRepository.add(orgId, id, `Convertido em cliente (${client.nome})`);
 
   return NextResponse.json({ client }, { status: 201 });
 }

@@ -3,7 +3,12 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import type { SessionUser } from "@/types";
 
-const SECRET = process.env.JWT_SECRET || "dev-secret-troque-em-producao";
+const SECRET = process.env.JWT_SECRET || (() => {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET não configurado. Defina esta variável de ambiente antes de rodar em produção.");
+  }
+  return "dev-secret-troque-em-producao";
+})();
 const COOKIE_NAME = "crm_session";
 
 export async function hashPassword(password: string): Promise<string> {

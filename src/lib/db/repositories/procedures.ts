@@ -1,49 +1,105 @@
-import { readOrgCollection, writeOrgCollection, generateId } from "../store";
+import { query, queryOne } from "../pg";
 import type { Procedure } from "@/types";
 
-const COLLECTION = "procedures";
+interface ProcedureRow {
+  id: string;
+  organization_id: string;
+  nome: string;
+  valor: string; // NUMERIC vem como string do pg
+  tempo_medio_min: number;
+  comissao_percentual: string;
+  descricao: string | null;
+  materiais: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+function toProcedure(row: ProcedureRow): Procedure {
+  return {
+    id: row.id,
+    nome: row.nome,
+    valor: parseFloat(row.valor),
+    tempoMedioMin: row.tempo_medio_min,
+    comissaoPercentual: parseFloat(row.comissao_percentual),
+    descricao: row.descricao ?? undefined,
+    materiais: row.materiais ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
 
 export const proceduresRepository = {
-  findAll(organizationId: string): Procedure[] {
-    return readOrgCollection<Procedure>(organizationId, COLLECTION).sort((a, b) =>
-      a.nome.localeCompare(b.nome, "pt-BR")
+  async findAll(organizationId: string): Promise<Procedure[]> {
+    const rows = await query<ProcedureRow>(
+      "SELECT * FROM procedures WHERE organization_id = $1 ORDER BY nome",
+      [organizationId]
     );
+    return rows.map(toProcedure);
   },
 
-  findById(organizationId: string, id: string): Procedure | undefined {
-    return readOrgCollection<Procedure>(organizationId, COLLECTION).find((p) => p.id === id);
+  async findById(organizationId: string, id: string): Promise<Procedure | undefined> {
+    const row = await queryOne<ProcedureRow>(
+      "SELECT * FROM procedures WHERE organization_id = $1 AND id = $2",
+      [organizationId, id]
+    );
+    return row ? toProcedure(row) : undefined;
   },
 
-  create(
+  async create(
     organizationId: string,
     data: Omit<Procedure, "id" | "createdAt" | "updatedAt">
-  ): Procedure {
-    const all = readOrgCollection<Procedure>(organizationId, COLLECTION);
-    const now = new Date().toISOString();
-    const procedure: Procedure = { ...data, id: generateId(), createdAt: now, updatedAt: now };
-    all.push(procedure);
-    writeOrgCollection(organizationId, COLLECTION, all);
-    return procedure;
+  ): Promise<Procedure> {
+    const row = await queryOne<ProcedureRow>(
+      `INSERT INTO procedures
+         (organization_id, nome, valor, tempo_medio_min, comissao_percentual, descricao, materiais)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)
+       RETURNING *`,
+      [
+        organizationId,
+        data.nome,
+        data.valor,
+        data.tempoMedioMin,
+        data.comissaoPercentual,
+        data.descricao ?? null,
+        data.materiais ?? null,
+      ]
+    );
+    return toProcedure(row!);
   },
 
-  update(
+  async update(
     organizationId: string,
     id: string,
     data: Partial<Omit<Procedure, "id" | "createdAt">>
-  ): Procedure | undefined {
-    const all = readOrgCollection<Procedure>(organizationId, COLLECTION);
-    const idx = all.findIndex((p) => p.id === id);
-    if (idx === -1) return undefined;
-    all[idx] = { ...all[idx], ...data, updatedAt: new Date().toISOString() };
-    writeOrgCollection(organizationId, COLLECTION, all);
-    return all[idx];
+  ): Promise<Procedure | undefined> {
+    const current = await this.findById(organizationId, id);
+    if (!current) return undefined;
+    const merged = { ...current, ...data };
+    const row = await queryOne<ProcedureRow>(
+      `UPDATE procedures SET
+         nome = $1, valor = $2, tempo_medio_min = $3,
+         comissao_percentual = $4, descricao = $5, materiais = $6
+       WHERE organization_id = $7 AND id = $8
+       RETURNING *`,
+      [
+        merged.nome,
+        merged.valor,
+        merged.tempoMedioMin,
+        merged.comissaoPercentual,
+        merged.descricao ?? null,
+        merged.materiais ?? null,
+        organizationId,
+        id,
+      ]
+    );
+    return row ? toProcedure(row) : undefined;
   },
 
-  delete(organizationId: string, id: string): boolean {
-    const all = readOrgCollection<Procedure>(organizationId, COLLECTION);
-    const next = all.filter((p) => p.id !== id);
-    if (next.length === all.length) return false;
-    writeOrgCollection(organizationId, COLLECTION, next);
-    return true;
+  async delete(organizationId: string, id: string): Promise<boolean> {
+    const rows = await query(
+      "DELETE FROM procedures WHERE organization_id = $1 AND id = $2 RETURNING id",
+      [organizationId, id]
+    );
+    return rows.length > 0;
   },
 };

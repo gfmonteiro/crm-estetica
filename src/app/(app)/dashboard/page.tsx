@@ -13,9 +13,9 @@ export default async function DashboardPage() {
   if (!session?.organizationId) redirect("/login");
   const orgId = session.organizationId;
 
-  const stats = getDashboardStats(orgId);
-  const clients = clientsRepository.findAll(orgId);
-  const procedures = proceduresRepository.findAll(orgId);
+  const stats = await getDashboardStats(orgId);
+  const clients = await clientsRepository.findAll(orgId);
+  const procedures = await proceduresRepository.findAll(orgId);
   const clientById = new Map(clients.map((c) => [c.id, c]));
   const procedureById = new Map(procedures.map((p) => [p.id, p]));
 
