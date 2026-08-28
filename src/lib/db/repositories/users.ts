@@ -60,4 +60,12 @@ export const usersRepository = {
     );
     return toUser(row!);
   },
+
+  async updatePassword(userId: string, passwordHash: string): Promise<boolean> {
+    const rows = await query(
+      "UPDATE users SET password_hash = $1 WHERE id = $2 RETURNING id",
+      [passwordHash, userId]
+    );
+    return rows.length > 0;
+  },
 };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function LoginPage() {
@@ -100,7 +101,9 @@ export default function LoginPage() {
           </button>
 
           <p className="mt-4 text-center text-xs text-muted">
-            <a href="">Esqueceu sua Senha?</a>
+            <Link href="/login/esqueci-senha" className="text-accent hover:underline">
+              Esqueceu sua Senha?
+            </Link>
           </p>
         </form>
       </div>
