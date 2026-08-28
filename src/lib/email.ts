@@ -3,7 +3,7 @@ import { Resend } from "resend";
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    throw new Error("RESEND_API_KEY n�o configurada. Defina no .env");
+    throw new Error("RESEND_API_KEY não configurada. Defina no .env");
   }
   return new Resend(apiKey);
 }
@@ -35,10 +35,10 @@ export function buildPasswordResetEmail(resetUrl: string): string {
   return `
     <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 16px;">
       <h2 style="color: #1a1a1a; font-size: 20px; margin-bottom: 16px;">
-        Redefinição de Senha
+        RedefiniÃ§Ã£o de Senha
       </h2>
       <p style="color: #4a4a4a; font-size: 14px; line-height: 1.6;">
-        Você solicitou a redefinição da sua senha. Clique no botão abaixo para criar uma nova senha:
+        VocÃª solicitou a redefiniÃ§Ã£o da sua senha. Clique no botÃ£o abaixo para criar uma nova senha:
       </p>
       <a
         href="${resetUrl}"
@@ -47,10 +47,10 @@ export function buildPasswordResetEmail(resetUrl: string): string {
         Redefinir Senha
       </a>
       <p style="color: #4a4a4a; font-size: 14px; line-height: 1.6;">
-        Se você não solicitou essa redefinição, ignore este e-mail. O link expira em 1 hora.
+        Se vocÃª nÃ£o solicitou essa redefiniÃ§Ã£o, ignore este e-mail. O link expira em 1 hora.
       </p>
       <p style="color: #999; font-size: 12px; margin-top: 32px;">
-        Se o botão não funcionar, copie e cole este link no navegador:<br/>
+        Se o botÃ£o nÃ£o funcionar, copie e cole este link no navegador:<br/>
         <span style="color: #7c3aed;">${resetUrl}</span>
       </p>
     </div>
