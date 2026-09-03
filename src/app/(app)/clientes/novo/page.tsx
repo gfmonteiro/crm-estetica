@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { CLIENT_TAGS, CLIENT_ORIGINS } from "@/lib/constants";
+import { maskPhone, maskCPF } from "@/lib/format";
 import type { ClientTag } from "@/types";
 
 export default function NovoClientePage() {
@@ -47,7 +48,13 @@ export default function NovoClientePage() {
     });
     setSaving(false);
     if (!res.ok) {
-      setError("Verifique os campos obrigatÃ³rios (nome e telefone).");
+      if (res.status === 401) {
+        setError("Sua sessão expirou. Faça login novamente.");
+      } else if (res.status === 400) {
+        setError("Verifique os campos obrigatórios (nome e telefone).");
+      } else {
+        setError("Não foi possível salvar o cliente. Tente novamente.");
+      }
       return;
     }
     const client = await res.json();
@@ -80,17 +87,19 @@ export default function NovoClientePage() {
               <input
                 required
                 value={form.telefone}
-                onChange={(e) => update("telefone", e.target.value)}
+                onChange={(e) => update("telefone", maskPhone(e.target.value))}
                 className="input"
                 placeholder="(00) 00000-0000"
+                inputMode="numeric"
               />
             </Field>
             <Field label="WhatsApp">
               <input
                 value={form.whatsapp}
-                onChange={(e) => update("whatsapp", e.target.value)}
+                onChange={(e) => update("whatsapp", maskPhone(e.target.value))}
                 className="input"
                 placeholder="(00) 00000-0000"
+                inputMode="numeric"
               />
             </Field>
             <Field label="E-mail">
@@ -102,7 +111,13 @@ export default function NovoClientePage() {
               />
             </Field>
             <Field label="CPF">
-              <input value={form.cpf} onChange={(e) => update("cpf", e.target.value)} className="input" />
+              <input
+                value={form.cpf}
+                onChange={(e) => update("cpf", maskCPF(e.target.value))}
+                className="input"
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+              />
             </Field>
             <Field label="Data de nascimento">
               <input

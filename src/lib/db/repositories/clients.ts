@@ -1,6 +1,12 @@
 import { query, queryOne } from "../pg";
 import type { Client, ClientTag } from "@/types";
 
+// Converte string vazia (e undefined/null) em null. Necessário porque colunas
+// como data_nascimento (DATE) rejeitam "" com DateTimeParseError no PostgreSQL.
+function nullIfEmpty<T>(value: T): T | null {
+  return value === "" || value == null ? null : value;
+}
+
 interface ClientRow {
   id: string;
   organization_id: string;
@@ -81,17 +87,17 @@ export const clientsRepository = {
         organizationId,
         data.nome,
         data.telefone,
-        data.whatsapp ?? null,
-        data.email ?? null,
-        data.cpf ?? null,
-        data.dataNascimento ?? null,
-        data.sexo ?? null,
-        data.endereco ?? null,
-        data.cidade ?? null,
-        data.estado ?? null,
-        data.origem ?? null,
-        data.profissao ?? null,
-        data.observacoes ?? null,
+        nullIfEmpty(data.whatsapp),
+        nullIfEmpty(data.email),
+        nullIfEmpty(data.cpf),
+        nullIfEmpty(data.dataNascimento),
+        nullIfEmpty(data.sexo),
+        nullIfEmpty(data.endereco),
+        nullIfEmpty(data.cidade),
+        nullIfEmpty(data.estado),
+        nullIfEmpty(data.origem),
+        nullIfEmpty(data.profissao),
+        nullIfEmpty(data.observacoes),
         data.status,
         data.tags ?? [],
       ]
@@ -117,17 +123,17 @@ export const clientsRepository = {
       [
         merged.nome,
         merged.telefone,
-        merged.whatsapp ?? null,
-        merged.email ?? null,
-        merged.cpf ?? null,
-        merged.dataNascimento ?? null,
-        merged.sexo ?? null,
-        merged.endereco ?? null,
-        merged.cidade ?? null,
-        merged.estado ?? null,
-        merged.origem ?? null,
-        merged.profissao ?? null,
-        merged.observacoes ?? null,
+        nullIfEmpty(merged.whatsapp),
+        nullIfEmpty(merged.email),
+        nullIfEmpty(merged.cpf),
+        nullIfEmpty(merged.dataNascimento),
+        nullIfEmpty(merged.sexo),
+        nullIfEmpty(merged.endereco),
+        nullIfEmpty(merged.cidade),
+        nullIfEmpty(merged.estado),
+        nullIfEmpty(merged.origem),
+        nullIfEmpty(merged.profissao),
+        nullIfEmpty(merged.observacoes),
         merged.status,
         merged.tags ?? [],
         organizationId,

@@ -132,7 +132,13 @@ function NewFormModal({ onClose, onSaved }: { onClose: () => void; onSaved: () =
     });
     setSaving(false);
     if (!res.ok) {
-      setError("Verifique o nome da ficha.");
+      if (res.status === 401) {
+        setError("Sua sessão expirou. Faça login novamente.");
+      } else if (res.status === 400) {
+        setError("O nome da ficha deve ter pelo menos 2 caracteres.");
+      } else {
+        setError("Não foi possível criar a ficha. Tente novamente.");
+      }
       return;
     }
     onSaved();
