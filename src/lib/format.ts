@@ -19,15 +19,15 @@ export function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 }
 
-// --- Máscaras de input ---
+// --- MÃ¡scaras de input ---
 
-// Mantém apenas dígitos de uma string.
+// MantÃ©m apenas dÃ­gitos de uma string.
 function onlyDigits(value: string): string {
   return value.replace(/\D/g, "");
 }
 
 /**
- * Máscara de telefone/celular brasileiro.
+ * MÃ¡scara de telefone/celular brasileiro.
  * Formata como (00) 0000-0000 (fixo) ou (00) 00000-0000 (celular).
  */
 export function maskPhone(value: string): string {
@@ -40,7 +40,7 @@ export function maskPhone(value: string): string {
 }
 
 /**
- * Máscara de CPF: 000.000.000-00.
+ * MÃ¡scara de CPF: 000.000.000-00.
  */
 export function maskCPF(value: string): string {
   const d = onlyDigits(value).slice(0, 11);

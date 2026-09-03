@@ -49,11 +49,11 @@ export default function NovoClientePage() {
     setSaving(false);
     if (!res.ok) {
       if (res.status === 401) {
-        setError("Sua sess�o expirou. Fa�a login novamente.");
+        setError("Sua sessão expirou. Faça login novamente.");
       } else if (res.status === 400) {
-        setError("Verifique os campos obrigat�rios (nome e telefone).");
+        setError("Verifique os campos obrigatórios (nome e telefone).");
       } else {
-        setError("N�o foi poss�vel salvar o cliente. Tente novamente.");
+        setError("Não foi possível salvar o cliente. Tente novamente.");
       }
       return;
     }
@@ -73,7 +73,7 @@ export default function NovoClientePage() {
 
       <form onSubmit={handleSubmit} className="card space-y-6 p-6">
         <section>
-          <h2 className="mb-3 text-sm font-semibold text-foreground">Dados básicos</h2>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">Dados bÃ¡sicos</h2>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Nome completo" required>
               <input
@@ -135,7 +135,7 @@ export default function NovoClientePage() {
                 <option value="Outro">Outro</option>
               </select>
             </Field>
-            <Field label="Profissão">
+            <Field label="ProfissÃ£o">
               <input
                 value={form.profissao}
                 onChange={(e) => update("profissao", e.target.value)}
@@ -146,9 +146,9 @@ export default function NovoClientePage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-sm font-semibold text-foreground">Endereço</h2>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">EndereÃ§o</h2>
           <div className="grid grid-cols-3 gap-4">
-            <Field label="Endereço">
+            <Field label="EndereÃ§o">
               <input
                 value={form.endereco}
                 onChange={(e) => update("endereco", e.target.value)}
@@ -195,7 +195,7 @@ export default function NovoClientePage() {
           </div>
         </section>
 
-        <Field label="Observações">
+        <Field label="ObservaÃ§Ãµes">
           <textarea
             value={form.observacoes}
             onChange={(e) => update("observacoes", e.target.value)}

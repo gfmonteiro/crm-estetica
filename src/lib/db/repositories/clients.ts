@@ -1,7 +1,7 @@
 import { query, queryOne } from "../pg";
 import type { Client, ClientTag } from "@/types";
 
-// Converte string vazia (e undefined/null) em null. Necess·rio porque colunas
+// Converte string vazia (e undefined/null) em null. Necess√°rio porque colunas
 // como data_nascimento (DATE) rejeitam "" com DateTimeParseError no PostgreSQL.
 function nullIfEmpty<T>(value: T): T | null {
   return value === "" || value == null ? null : value;

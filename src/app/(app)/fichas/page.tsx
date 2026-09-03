@@ -24,7 +24,7 @@ export default function FichasPage() {
   }, []);
 
   async function handleDelete(id: string) {
-    if (!confirm("Remover esta ficha? As respostas já recebidas continuam guardadas.")) return;
+    if (!confirm("Remover esta ficha? As respostas jÃ¡ recebidas continuam guardadas.")) return;
     await fetch(`/api/anamnesis-forms/${id}`, { method: "DELETE" });
     load();
   }
@@ -71,7 +71,7 @@ export default function FichasPage() {
                     </Badge>
                   </div>
                   <p className="mb-4 text-xs text-muted">
-                    {form.categorias.length} categoria(s) · {totalPerguntas} pergunta(s)
+                    {form.categorias.length} categoria(s) Â· {totalPerguntas} pergunta(s)
                   </p>
                   <div className="flex flex-wrap gap-3 text-xs">
                     <Link href={`/fichas/${form.id}`} className="font-medium text-accent hover:underline">
@@ -133,11 +133,11 @@ function NewFormModal({ onClose, onSaved }: { onClose: () => void; onSaved: () =
     setSaving(false);
     if (!res.ok) {
       if (res.status === 401) {
-        setError("Sua sess�o expirou. Fa�a login novamente.");
+        setError("Sua sessão expirou. Faça login novamente.");
       } else if (res.status === 400) {
         setError("O nome da ficha deve ter pelo menos 2 caracteres.");
       } else {
-        setError("N�o foi poss�vel criar a ficha. Tente novamente.");
+        setError("Não foi possível criar a ficha. Tente novamente.");
       }
       return;
     }
@@ -211,7 +211,7 @@ function GenerateLinkModal({ form, onClose }: { form: AnamnesisForm; onClose: ()
     const data = await res.json();
     setGenerating(false);
     if (!res.ok) {
-      setError(data.error || "Não foi possível gerar o link.");
+      setError(data.error || "NÃ£o foi possÃ­vel gerar o link.");
       return;
     }
     setUrl(`${window.location.origin}${data.path}`);
@@ -229,7 +229,7 @@ function GenerateLinkModal({ form, onClose }: { form: AnamnesisForm; onClose: ()
       <div className="card w-full max-w-md p-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-[family-name:var(--font-display)] text-lg text-foreground">
-            Link — {form.nome}
+            Link â {form.nome}
           </h2>
           <button onClick={onClose} className="text-muted hover:text-foreground">
             <X size={18} />
@@ -256,7 +256,7 @@ function GenerateLinkModal({ form, onClose }: { form: AnamnesisForm; onClose: ()
         ) : (
           <div className="space-y-3">
             <p className="text-sm text-muted">
-              Envie esse link pra cliente preencher e assinar. Ele funciona uma única vez.
+              Envie esse link pra cliente preencher e assinar. Ele funciona uma Ãºnica vez.
             </p>
             <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2">
               <span className="min-w-0 flex-1 truncate text-xs text-foreground">{url}</span>
